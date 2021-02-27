@@ -7,6 +7,12 @@
 
 import UIKit
 
+enum TabBarTag: Int {
+    case home = 1
+    case search = 2
+    case library = 3
+}
+
 class TabBarViewController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -16,9 +22,9 @@ class TabBarViewController: UITabBarController {
     
     private func prepareViewControllers() {
         viewControllers = [
-            createNavController(for: HomeViewController(), title: NSLocalizedString("Home", comment: ""), image: UIImage(systemName: "house"), tag: 2),
-            createNavController(for: SearchViewController(), title: NSLocalizedString("Search", comment: ""), image: UIImage(systemName: "magnifyingglass"), tag: 1),
-            createNavController(for: LibraryViewController(), title: NSLocalizedString("Library", comment: ""), image: UIImage(systemName: "person"), tag: 3)
+            createNavController(for: HomeViewController(), title: NSLocalizedString("Home", comment: ""), image: UIImage(systemName: "house"), tag: TabBarTag.home.rawValue),
+            createNavController(for: SearchViewController(), title: NSLocalizedString("Search", comment: ""), image: UIImage(systemName: "magnifyingglass"), tag: TabBarTag.search.rawValue),
+            createNavController(for: LibraryViewController(), title: NSLocalizedString("Library", comment: ""), image: UIImage(systemName: "person"), tag: TabBarTag.library.rawValue)
         ]
     }
     
@@ -29,6 +35,7 @@ class TabBarViewController: UITabBarController {
         let navController = UINavigationController(rootViewController: rootViewController)
         navController.tabBarItem.title = title
         navController.tabBarItem.image = image
+        navController.tabBarItem.tag = tag
         navController.navigationBar.prefersLargeTitles = true
         rootViewController.navigationItem.title = title
         return navController

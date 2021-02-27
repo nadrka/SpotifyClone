@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Combine
 
 enum ApiError: Error {
     case cannotDecodeOutput
@@ -17,75 +18,79 @@ enum ApiError: Error {
 
 class Client {
     
-    func call<O: Decodable>(type: O.Type, endpoint: Endpoint, completion: @escaping (Result<O, ApiError>) -> ()) {
+    func call<O: Decodable>(type: O.Type, endpoint: Endpoint) -> Future<O, ApiError> {
         let urlSession = URLSession(configuration: .default)
         
         guard let request = createRequest(for: endpoint) else {
-            completion(.failure(.invalidPath))
-            return
-        }
-        
-        let dataTask = urlSession.dataTask(with: request) { data, _, error in
-            if let error = error {
-                completion(.failure(.other(error: error)))
-                return
-            }
-            
-            guard let data = data else {
-                completion(.failure(.noData))
-                return
-            }
-            
-            do {
-                let output = try JSONDecoder().decode(type, from: data)
-                completion(.success(output))
-            } catch let jsonError {
-                print(jsonError)
-                completion(.failure(.cannotDecodeOutput))
+            return Future { promise in
+                promise(.failure(.invalidPath))
             }
         }
         
-        dataTask.resume()
-        
+        return Future { promise in
+            let dataTask = urlSession.dataTask(with: request) { data, _, error in
+                if let error = error {
+                    promise(.failure(.other(error: error)))
+                    return
+                }
+                guard let data = data else {
+                    promise(.failure(.noData))
+                    return
+                }
+                
+                do {
+                    let output = try JSONDecoder().decode(type, from: data)
+                    promise(.success(output))
+                } catch let jsonError {
+                    print(jsonError)
+                    promise(.failure(.other(error: jsonError)))
+                }
+            }
+            
+            dataTask.resume()
+        }
     }
     
-    func call<I: Codable, O: Decodable>(type: O.Type, input: I, endpoint: Endpoint, completion: @escaping (Result<O, ApiError>) -> ()) {
+    func call<I: Codable, O: Decodable>(type: O.Type, input: I, endpoint: Endpoint) -> Future<O, ApiError> {
         let urlSession = URLSession(configuration: .default)
         
         guard var request = createRequest(for: endpoint) else {
-            completion(.failure(.invalidPath))
-            return
+            return Future { promise in
+                promise(.failure(.invalidPath))
+            }
         }
         
         guard let body = try? JSONEncoder().encode(input) else {
-            completion(.failure(.cannotEncodeInput))
-            return
+            return Future { promise in
+                promise(.failure(.cannotEncodeInput))
+            }
         }
         
         request.httpBody = body
         
-        let dataTask = urlSession.dataTask(with: request) { data, _, error in
-            if let error = error {
-                completion(.failure(.other(error: error)))
-                return
+        return Future { promise in
+            let dataTask = urlSession.dataTask(with: request) { data, _, error in
+                if let error = error {
+                    promise(.failure(.other(error: error)))
+                    return
+                }
+                
+                guard let data = data else {
+                    promise(.failure(.noData))
+                    return
+                }
+                
+                do {
+                    let output = try JSONDecoder().decode(type, from: data)
+                    promise(.success(output))
+                } catch let jsonError {
+                    print(jsonError)
+                    promise(.failure(.other(error: jsonError)))
+                }
             }
             
-            guard let data = data else {
-                completion(.failure(.noData))
-                return
-            }
-            
-            do {
-                let output = try JSONDecoder().decode(type, from: data)
-                completion(.success(output))
-            } catch let jsonError {
-                print(jsonError)
-                completion(.failure(.cannotDecodeOutput))
-            }
+            dataTask.resume()
         }
-        
-        dataTask.resume()
-        
     }
     
     private func createRequest(for endpoint: Endpoint) -> URLRequest? {
@@ -98,6 +103,5 @@ class Client {
         
         return nil
     }
-    
     
 }
