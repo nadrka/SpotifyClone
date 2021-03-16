@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -21,6 +21,11 @@
 		3C1CCC3A25EAB2580016EF64 /* Client.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C1CCC3925EAB2580016EF64 /* Client.swift */; };
 		3C1CCC4225EAB2610016EF64 /* API.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C1CCC4125EAB2610016EF64 /* API.swift */; };
 		3C1CCC4725EAB26E0016EF64 /* Endpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C1CCC4625EAB26E0016EF64 /* Endpoint.swift */; };
+		3C364E6E25FFE87300CD4B60 /* AuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C364E6D25FFE87300CD4B60 /* AuthManager.swift */; };
+		3C364E7325FFE88100CD4B60 /* UserDefaultsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C364E7225FFE88100CD4B60 /* UserDefaultsManager.swift */; };
+		3C364EA725FFED0E00CD4B60 /* WelcomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C364EA625FFED0E00CD4B60 /* WelcomeViewController.swift */; };
+		3CA9FFCC25EC3AC300264E35 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 3CA9FFCB25EC3AC300264E35 /* SnapKit */; };
+		3CA9FFD225EC3B2600264E35 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 3CA9FFD125EC3B2600264E35 /* Kingfisher */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -61,6 +66,9 @@
 		3C1CCC3925EAB2580016EF64 /* Client.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Client.swift; sourceTree = "<group>"; };
 		3C1CCC4125EAB2610016EF64 /* API.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = API.swift; sourceTree = "<group>"; };
 		3C1CCC4625EAB26E0016EF64 /* Endpoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Endpoint.swift; sourceTree = "<group>"; };
+		3C364E6D25FFE87300CD4B60 /* AuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthManager.swift; sourceTree = "<group>"; };
+		3C364E7225FFE88100CD4B60 /* UserDefaultsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsManager.swift; sourceTree = "<group>"; };
+		3C364EA625FFED0E00CD4B60 /* WelcomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -68,6 +76,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3CA9FFD225EC3B2600264E35 /* Kingfisher in Frameworks */,
+				3CA9FFCC25EC3AC300264E35 /* SnapKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -111,16 +121,16 @@
 		3C1CCBAF25EAA5570016EF64 /* SpotifyClone */ = {
 			isa = PBXGroup;
 			children = (
-				3C1CCBED25EAA95A0016EF64 /* Resources */,
-				3C1CCBEC25EAA9530016EF64 /* ViewModels */,
-				3C1CCBEB25EAA9270016EF64 /* Stores */,
 				3C1CCBEA25EAA9220016EF64 /* Extensions */,
+				3C1CCBE625EAA8E40016EF64 /* Features */,
+				3C364EA425FFEAE800CD4B60 /* Flows */,
 				3C1CCBE925EAA91B0016EF64 /* Managers */,
-				3C1CCBE825EAA90E0016EF64 /* Views */,
 				3C1CCBE725EAA9090016EF64 /* Models */,
-				3C1CCBE625EAA8E40016EF64 /* ViewControllers */,
-				3C1CCBBB25EAA5570016EF64 /* LaunchScreen.storyboard */,
-				3C1CCBBE25EAA5570016EF64 /* Info.plist */,
+				3C1CCBED25EAA95A0016EF64 /* Resources */,
+				3C364E5F25FFE54600CD4B60 /* Startups */,
+				3C1CCBEB25EAA9270016EF64 /* Stores */,
+				3C364E6325FFE60200CD4B60 /* Utils */,
+				3C364E6725FFE72F00CD4B60 /* Views */,
 			);
 			path = SpotifyClone;
 			sourceTree = "<group>";
@@ -143,13 +153,13 @@
 			path = SpotifyCloneUITests;
 			sourceTree = "<group>";
 		};
-		3C1CCBE625EAA8E40016EF64 /* ViewControllers */ = {
+		3C1CCBE625EAA8E40016EF64 /* Features */ = {
 			isa = PBXGroup;
 			children = (
-				3C1CCC2525EAAC340016EF64 /* Others */,
 				3C1CCC1C25EAABD40016EF64 /* Core */,
+				3C1CCC2525EAAC340016EF64 /* Others */,
 			);
-			path = ViewControllers;
+			path = Features;
 			sourceTree = "<group>";
 		};
 		3C1CCBE725EAA9090016EF64 /* Models */ = {
@@ -159,17 +169,12 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
-		3C1CCBE825EAA90E0016EF64 /* Views */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Views;
-			sourceTree = "<group>";
-		};
 		3C1CCBE925EAA91B0016EF64 /* Managers */ = {
 			isa = PBXGroup;
 			children = (
 				3C1CCC3825EAB24C0016EF64 /* Networking */,
+				3C364E6D25FFE87300CD4B60 /* AuthManager.swift */,
+				3C364E7225FFE88100CD4B60 /* UserDefaultsManager.swift */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -188,20 +193,13 @@
 			path = Stores;
 			sourceTree = "<group>";
 		};
-		3C1CCBEC25EAA9530016EF64 /* ViewModels */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = ViewModels;
-			sourceTree = "<group>";
-		};
 		3C1CCBED25EAA95A0016EF64 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				3C1CCBB025EAA5570016EF64 /* AppDelegate.swift */,
-				3C1CCBB225EAA5570016EF64 /* SceneDelegate.swift */,
 				3C1CCBEE25EAA97C0016EF64 /* Colors.xcassets */,
 				3C1CCC1625EAAA580016EF64 /* Images.xcassets */,
+				3C1CCBBE25EAA5570016EF64 /* Info.plist */,
+				3C1CCBBB25EAA5570016EF64 /* LaunchScreen.storyboard */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -209,10 +207,10 @@
 		3C1CCC1C25EAABD40016EF64 /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				3C364E6425FFE6EF00CD4B60 /* Home */,
+				3C364E6625FFE6FA00CD4B60 /* Library */,
+				3C364E6525FFE6F400CD4B60 /* Search */,
 				3C1CCC1D25EAAC2A0016EF64 /* TabBarViewController.swift */,
-				3C1CCC2925EAB05A0016EF64 /* HomeViewController.swift */,
-				3C1CCC2E25EAB07B0016EF64 /* SearchViewController.swift */,
-				3C1CCC3325EAB0850016EF64 /* LibraryViewController.swift */,
 			);
 			path = Core;
 			sourceTree = "<group>";
@@ -220,6 +218,7 @@
 		3C1CCC2525EAAC340016EF64 /* Others */ = {
 			isa = PBXGroup;
 			children = (
+				3C364EA525FFECFE00CD4B60 /* Welcome */,
 			);
 			path = Others;
 			sourceTree = "<group>";
@@ -242,6 +241,84 @@
 			path = API;
 			sourceTree = "<group>";
 		};
+		3C364E5F25FFE54600CD4B60 /* Startups */ = {
+			isa = PBXGroup;
+			children = (
+				3C1CCBB025EAA5570016EF64 /* AppDelegate.swift */,
+				3C1CCBB225EAA5570016EF64 /* SceneDelegate.swift */,
+			);
+			path = Startups;
+			sourceTree = "<group>";
+		};
+		3C364E6325FFE60200CD4B60 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
+		3C364E6425FFE6EF00CD4B60 /* Home */ = {
+			isa = PBXGroup;
+			children = (
+				3C1CCC2925EAB05A0016EF64 /* HomeViewController.swift */,
+			);
+			path = Home;
+			sourceTree = "<group>";
+		};
+		3C364E6525FFE6F400CD4B60 /* Search */ = {
+			isa = PBXGroup;
+			children = (
+				3C1CCC2E25EAB07B0016EF64 /* SearchViewController.swift */,
+			);
+			path = Search;
+			sourceTree = "<group>";
+		};
+		3C364E6625FFE6FA00CD4B60 /* Library */ = {
+			isa = PBXGroup;
+			children = (
+				3C1CCC3325EAB0850016EF64 /* LibraryViewController.swift */,
+			);
+			path = Library;
+			sourceTree = "<group>";
+		};
+		3C364E6725FFE72F00CD4B60 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				3C364E6925FFE73B00CD4B60 /* Custom */,
+				3C364E6825FFE73300CD4B60 /* Shared */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		3C364E6825FFE73300CD4B60 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		3C364E6925FFE73B00CD4B60 /* Custom */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Custom;
+			sourceTree = "<group>";
+		};
+		3C364EA425FFEAE800CD4B60 /* Flows */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Flows;
+			sourceTree = "<group>";
+		};
+		3C364EA525FFECFE00CD4B60 /* Welcome */ = {
+			isa = PBXGroup;
+			children = (
+				3C364EA625FFED0E00CD4B60 /* WelcomeViewController.swift */,
+			);
+			path = Welcome;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -258,6 +335,10 @@
 			dependencies = (
 			);
 			name = SpotifyClone;
+			packageProductDependencies = (
+				3CA9FFCB25EC3AC300264E35 /* SnapKit */,
+				3CA9FFD125EC3B2600264E35 /* Kingfisher */,
+			);
 			productName = SpotifyClone;
 			productReference = 3C1CCBAD25EAA5570016EF64 /* SpotifyClone.app */;
 			productType = "com.apple.product-type.application";
@@ -329,6 +410,10 @@
 				Base,
 			);
 			mainGroup = 3C1CCBA425EAA5570016EF64;
+			packageReferences = (
+				3CA9FFCA25EC3AC300264E35 /* XCRemoteSwiftPackageReference "SnapKit" */,
+				3CA9FFD025EC3B2600264E35 /* XCRemoteSwiftPackageReference "Kingfisher" */,
+			);
 			productRefGroup = 3C1CCBAE25EAA5570016EF64 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -376,11 +461,14 @@
 				3C1CCC4725EAB26E0016EF64 /* Endpoint.swift in Sources */,
 				3C1CCC3A25EAB2580016EF64 /* Client.swift in Sources */,
 				3C1CCC1E25EAAC2A0016EF64 /* TabBarViewController.swift in Sources */,
+				3C364E7325FFE88100CD4B60 /* UserDefaultsManager.swift in Sources */,
 				3C1CCBB125EAA5570016EF64 /* AppDelegate.swift in Sources */,
 				3C1CCBB325EAA5570016EF64 /* SceneDelegate.swift in Sources */,
 				3C1CCC3425EAB0850016EF64 /* LibraryViewController.swift in Sources */,
 				3C1CCC4225EAB2610016EF64 /* API.swift in Sources */,
+				3C364EA725FFED0E00CD4B60 /* WelcomeViewController.swift in Sources */,
 				3C1CCC2A25EAB05A0016EF64 /* HomeViewController.swift in Sources */,
+				3C364E6E25FFE87300CD4B60 /* AuthManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -549,7 +637,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				INFOPLIST_FILE = SpotifyClone/Info.plist;
+				INFOPLIST_FILE = SpotifyClone/Resources/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -557,7 +645,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = io.hanzaliderdevelopers.SpotifyClone;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -567,7 +655,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				INFOPLIST_FILE = SpotifyClone/Info.plist;
+				INFOPLIST_FILE = SpotifyClone/Resources/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -575,7 +663,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = io.hanzaliderdevelopers.SpotifyClone;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
@@ -699,6 +787,38 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		3CA9FFCA25EC3AC300264E35 /* XCRemoteSwiftPackageReference "SnapKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SnapKit/SnapKit";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.1;
+			};
+		};
+		3CA9FFD025EC3B2600264E35 /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/onevcat/Kingfisher";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 6.1.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		3CA9FFCB25EC3AC300264E35 /* SnapKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3CA9FFCA25EC3AC300264E35 /* XCRemoteSwiftPackageReference "SnapKit" */;
+			productName = SnapKit;
+		};
+		3CA9FFD125EC3B2600264E35 /* Kingfisher */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3CA9FFD025EC3B2600264E35 /* XCRemoteSwiftPackageReference "Kingfisher" */;
+			productName = Kingfisher;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 3C1CCBA525EAA5570016EF64 /* Project object */;
 }

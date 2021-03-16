@@ -18,6 +18,23 @@ enum ApiError: Error {
 
 class Client {
     
+    func call2<O: Decodable>(type: O.Type, endpoint: Endpoint) -> AnyPublisher<O, ApiError> {
+        guard let request = createRequest(for: endpoint) else {
+            return Fail(error: ApiError.invalidPath).eraseToAnyPublisher()
+        }
+        
+        return URLSession.shared.dataTaskPublisher(for: request)
+            .mapError { error in
+                ApiError.other(error: error)
+            }
+            .map(\.data)
+            .decode(type: O.self, decoder: JSONDecoder())
+            .mapError { _ in
+                ApiError.cannotDecodeOutput
+            }
+            .eraseToAnyPublisher()
+    }
+    
     func call<O: Decodable>(type: O.Type, endpoint: Endpoint) -> Future<O, ApiError> {
         let urlSession = URLSession(configuration: .default)
         
@@ -101,7 +118,7 @@ class Client {
         var urlRequest = URLRequest(url: url)
         urlRequest.httpMethod = endpoint.method.rawValue
         
-        return nil
+        return urlRequest
     }
     
 }
