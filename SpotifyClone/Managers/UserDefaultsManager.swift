@@ -8,12 +8,19 @@
 import Foundation
 
 struct UserDefaultsManager {
+    @UserDefaultValue(key: "accessToken", defaultValue: nil)
+    static var accessToken: String?
     
+    @UserDefaultValue(key: "refreshToken", defaultValue: nil)
+    static var refreshToken: String?
+    
+    @UserDefaultValue(key: "expirationDate", defaultValue: nil)
+    static var expirationDate: Date?
 }
 
 
 @propertyWrapper
-struct UserDefault<Value> {
+struct UserDefaultValue<Value> {
     let key: String
     let defaultValue: Value
 
