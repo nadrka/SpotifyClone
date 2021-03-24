@@ -22,6 +22,8 @@ struct Endpoint {
     let queryParameters: Parameters?
     let headers: Headers?
     let body: Body?
+    let authorizationNeeded: Bool
+    
     
     func url(with baseURL: String) -> URL? {
         let string = baseURL + path

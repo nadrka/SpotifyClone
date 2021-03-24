@@ -8,7 +8,7 @@ enum ApiError: Error {
     case other(error: Error)
 }
 
-protocol Client {
+protocol Client: class {
     var baseUrl: String { get }
     func call<O: Decodable>(type: O.Type,
                             endpoint: Endpoint,
@@ -21,11 +21,25 @@ extension Client {
                             endpoint: Endpoint,
                             completion: @escaping (_ result: Result<O, ApiError>) -> Void ){
         
-        guard let request = self.createUrlRequest(for: endpoint) else {
+        guard var request = createUrlRequest(for: endpoint) else {
             completion(.failure(ApiError.invalidPath))
             return
         }
-
+        
+        if endpoint.authorizationNeeded {
+            AuthManager.shared.withValidToken { [weak self] token in
+                request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+                self?.performDataTask(request: request, completion: completion)
+            }
+        } else {
+            performDataTask(request: request, completion: completion)
+        }
+        
+    }
+    
+    private func performDataTask<O: Decodable>(request: URLRequest,
+                                 completion: @escaping (_ result: Result<O, ApiError>) -> Void ) {
+        
         let session = URLSession(configuration: .default)
 
         let dataTask = session.dataTask(with: request) { data, response, error in

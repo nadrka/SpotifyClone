@@ -22,7 +22,8 @@ extension API {
                 "grant_type": "authorization_code",
                 "code": code,
                 "redirect_uri": AuthManager.Constants.redirectURI,
-            ]
+            ],
+            authorizationNeeded: false
         )
     }
     
@@ -38,7 +39,8 @@ extension API {
             body: [
                 "grant_type": "refresh_token",
                 "refresh_token": refreshToken,
-            ]
+            ],
+            authorizationNeeded: false
         )
     }
 }

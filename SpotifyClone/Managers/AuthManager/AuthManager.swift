@@ -9,30 +9,8 @@ import Foundation
 
 final class AuthManager {
     static let shared = AuthManager()
-    
-    struct Constants {
-        enum Scopes: String, CaseIterable {
-            case userReadPrivate = "user-read-private"
-            case playlistModifyPrivate = "playlist-modify-private"
-            case playlistModifyPublic = "playlist-modify-public"
-            case playlistReadPublic = "playlist-read-private"
-            case userFollowRead = "user-follow-read"
-            case userLibraryModify = "user-library-modify"
-            case userLibraryRead = "user-library-read"
-            case userReadEmail = "user-read-email"
-            
-        }
-        static let clientID = "1bacab2ad47843518461caa89cd45d62"
-        static let clientSecret = "38bbe290119c4c81bcc9fdb04f8a521a"
-        static let redirectURI = "https://iosacademy.io"
-        static let scopes = Scopes.allCases.map { $0.rawValue }.joined(separator: "%20")
-        static let token = clientID + ":" + clientSecret
-        
-        static var basicToken64: String {
-            let data = token.data(using: .utf8)
-            return data?.base64EncodedString() ?? ""
-        }
-    }
+    let authService = AuthService(client: AuthClient())
+    private var refreshingToken = false
     
     private init() {}
     
@@ -70,8 +48,6 @@ final class AuthManager {
     }
     
     public func exchangeCodeForToken(code: String, completion: @escaping (Bool) -> Void) {
-        let authService = AuthService(client: AuthClient())
-        
         authService.getToken(code: code) { [weak self] result in
             switch result {
             case .success(let result):
@@ -84,7 +60,33 @@ final class AuthManager {
         }
     }
     
+    private var onRefreshBlocks = [(String) -> Void]()
+    
+    public func withValidToken(completion: @escaping (_ token: String) -> Void) {
+        guard !refreshingToken else {
+            onRefreshBlocks.append(completion)
+            return
+        }
+        
+        if shouldRefreshToken {
+            refreshIfNeeded { [weak self] success in
+                if let token = self?.accessToken, success {
+                    completion(token)
+                }
+            }
+        }
+        else if let token = accessToken {
+            completion(token)
+        }
+    }
+    
+    
+    
     public func refreshIfNeeded(completion: @escaping (Bool) -> Void) {
+        guard !refreshingToken else {
+            return
+        }
+        
         guard shouldRefreshToken else {
             completion(true)
             return
@@ -94,12 +96,15 @@ final class AuthManager {
             return
         }
         
-        let authService = AuthService(client: AuthClient())
+        refreshingToken = true
         
         authService.getToken(refreshToken: refreshToken) { [weak self] result in
+            self?.refreshingToken = false
             switch result {
             case .success(let result):
                 print("Successfully refreshed")
+                self?.onRefreshBlocks.forEach { $0(result.accessToken)}
+                self?.onRefreshBlocks.removeAll()
                 self?.cacheResult(result: result)
                 completion(true)
             case .failure(let error):
