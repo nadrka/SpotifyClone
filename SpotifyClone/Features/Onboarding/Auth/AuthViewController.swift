@@ -10,8 +10,16 @@ import WebKit
 import SnapKit
 
 class AuthViewController: UIViewController, WKNavigationDelegate {
+    let viewModel: AuthViewModel
     
-    public var completionHandler: ((Bool) -> ())?
+    init(viewModel: AuthViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     private let webView: WKWebView = {
         let prefs = WKWebpagePreferences()
@@ -45,7 +53,7 @@ class AuthViewController: UIViewController, WKNavigationDelegate {
         title = "Sign In"
         
         webView.navigationDelegate = self
-        guard let url = AuthManager.shared.signInUrl else {
+        guard let url = viewModel.url else {
             return
         }
         webView.load(URLRequest(url: url))
@@ -56,21 +64,7 @@ class AuthViewController: UIViewController, WKNavigationDelegate {
             return
         }
         
-        // Exchange the code for access token
-        
-        let component = URLComponents(string: url.absoluteString)
-        
-        guard let code = component?.queryItems?.first(where: {$0.name == "code"})?.value else {
-            return
-        }
-        
-        print("Code: \(code)")
-        AuthManager.shared.exchangeCodeForToken(code: code) { [weak self] success in
-            DispatchQueue.main.async {
-                self?.navigationController?.popViewController(animated: true)
-                self?.completionHandler?(success)
-            }
-        }
+        viewModel.exchangeCodeForToken(url: url)
     }
     
     

@@ -9,6 +9,7 @@ import UIKit
 import SnapKit
 
 final class WelcomeViewController: UIViewController {
+    var onSignInTap: (() -> ())?
     
     private let signInButton: UIButton = {
         let button = UIButton()
@@ -46,24 +47,7 @@ final class WelcomeViewController: UIViewController {
     
     
     @objc private func didTapSignIn() {
-        let vc = AuthViewController()
-        vc.completionHandler = { [weak self] success in
-            self?.handleSignIn(with: success)
-        }
-        vc.navigationItem.largeTitleDisplayMode = .never
-        navigationController?.pushViewController(vc, animated: true)
+        onSignInTap?()
     }
     
-    private func handleSignIn(with success: Bool) {
-        guard success else {
-            assert(success, "Something went wrong when sign in")
-            return
-        }
-        
-        let mainAppTabBarVC = TabBarViewController()
-        
-        mainAppTabBarVC.modalPresentationStyle = .fullScreen
-        
-        present(mainAppTabBarVC, animated: true)
-    }
 }

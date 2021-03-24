@@ -47,6 +47,7 @@
 		3CED14132604C7C10002103F /* SectionHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CED14122604C7C10002103F /* SectionHeader.swift */; };
 		3CED14182604C7C60002103F /* SmallTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CED14172604C7C60002103F /* SmallTableCell.swift */; };
 		3CED141D2604C8540002103F /* AppStoreVIewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CED141C2604C8540002103F /* AppStoreVIewController.swift */; };
+		3CFE3C86260B5BE500651743 /* AuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CFE3C85260B5BE500651743 /* AuthViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -90,7 +91,7 @@
 		3C3307E52600B64B00CEDF09 /* MainFlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainFlow.swift; sourceTree = "<group>"; };
 		3C364E6D25FFE87300CD4B60 /* AuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthManager.swift; sourceTree = "<group>"; };
 		3C364E7225FFE88100CD4B60 /* UserDefaultsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsManager.swift; sourceTree = "<group>"; };
-		3C4050732607C62C00C1D23D /* WelcomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WelcomeViewController.swift; path = SpotifyClone/Features/Others/WelcomeViewController.swift; sourceTree = SOURCE_ROOT; };
+		3C4050732607C62C00C1D23D /* WelcomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WelcomeViewController.swift; path = SpotifyClone/Features/Onboarding/WelcomeViewController.swift; sourceTree = SOURCE_ROOT; };
 		3C4050782607C64700C1D23D /* AuthViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewController.swift; sourceTree = "<group>"; };
 		3C4050802607C85200C1D23D /* Style.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Style.swift; sourceTree = "<group>"; };
 		3C4050892607C8D000C1D23D /* Style+Sizes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Style+Sizes.swift"; sourceTree = "<group>"; };
@@ -111,6 +112,7 @@
 		3CED14122604C7C10002103F /* SectionHeader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SectionHeader.swift; sourceTree = "<group>"; };
 		3CED14172604C7C60002103F /* SmallTableCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SmallTableCell.swift; sourceTree = "<group>"; };
 		3CED141C2604C8540002103F /* AppStoreVIewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppStoreVIewController.swift; sourceTree = "<group>"; };
+		3CFE3C85260B5BE500651743 /* AuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -200,6 +202,7 @@
 			children = (
 				3CE1A8F22603D20C001F797F /* AppStore */,
 				3C1CCC1C25EAABD40016EF64 /* Core */,
+				3CFE3C84260B5BB800651743 /* Onboarding */,
 				3C1CCC2525EAAC340016EF64 /* Others */,
 			);
 			path = Features;
@@ -264,8 +267,6 @@
 		3C1CCC2525EAAC340016EF64 /* Others */ = {
 			isa = PBXGroup;
 			children = (
-				3C364EA525FFECFE00CD4B60 /* Welcome */,
-				3C4050782607C64700C1D23D /* AuthViewController.swift */,
 			);
 			path = Others;
 			sourceTree = "<group>";
@@ -362,14 +363,6 @@
 			path = Flows;
 			sourceTree = "<group>";
 		};
-		3C364EA525FFECFE00CD4B60 /* Welcome */ = {
-			isa = PBXGroup;
-			children = (
-				3C4050732607C62C00C1D23D /* WelcomeViewController.swift */,
-			);
-			path = Welcome;
-			sourceTree = "<group>";
-		};
 		3C4050882607C8B800C1D23D /* Style */ = {
 			isa = PBXGroup;
 			children = (
@@ -404,6 +397,24 @@
 				3CE1A91A2603DE8A001F797F /* FeaturedCell.swift */,
 			);
 			path = Cells;
+			sourceTree = "<group>";
+		};
+		3CFE3C83260B5BA800651743 /* Auth */ = {
+			isa = PBXGroup;
+			children = (
+				3C4050782607C64700C1D23D /* AuthViewController.swift */,
+				3CFE3C85260B5BE500651743 /* AuthViewModel.swift */,
+			);
+			path = Auth;
+			sourceTree = "<group>";
+		};
+		3CFE3C84260B5BB800651743 /* Onboarding */ = {
+			isa = PBXGroup;
+			children = (
+				3CFE3C83260B5BA800651743 /* Auth */,
+				3C4050732607C62C00C1D23D /* WelcomeViewController.swift */,
+			);
+			path = Onboarding;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -574,6 +585,7 @@
 				3CED140E2604C7BB0002103F /* MediumTableCell.swift in Sources */,
 				3CD49DBA260A09D400AC3AA1 /* AuthResponse.swift in Sources */,
 				3CD49DC2260A0B8300AC3AA1 /* AuthService.swift in Sources */,
+				3CFE3C86260B5BE500651743 /* AuthViewModel.swift in Sources */,
 				3C1CCC2A25EAB05A0016EF64 /* HomeViewController.swift in Sources */,
 				3C364E6E25FFE87300CD4B60 /* AuthManager.swift in Sources */,
 				3CD49DCA260A1EE400AC3AA1 /* Optional.swift in Sources */,

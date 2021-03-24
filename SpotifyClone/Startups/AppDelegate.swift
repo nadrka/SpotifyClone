@@ -12,20 +12,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     
     var window: UIWindow?
+    var mainFlow: MainFlow!
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         window = UIWindow(frame: UIScreen.main.bounds)
         
-        if AuthManager.shared.isSignedIn {
-            window?.rootViewController = TabBarViewController()
-        } else {
-            let vc = WelcomeViewController()
-            let rootNavigationContoller = UINavigationController(rootViewController: vc)
-            rootNavigationContoller.navigationBar.prefersLargeTitles = true
-            window?.rootViewController = rootNavigationContoller
-        }
-  
+        let rootNavigationContoller = UINavigationController()
+        rootNavigationContoller.navigationBar.prefersLargeTitles = true
+        
+        mainFlow = MainFlow(rootViewController: rootNavigationContoller)
+        window?.rootViewController = rootNavigationContoller
+        
         window?.makeKeyAndVisible()
+        
+        mainFlow.start()
   
         return true
     }
@@ -37,12 +37,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Use this method to select a configuration to create the new scene with.
         return UISceneConfiguration(name: "Default Configuration", sessionRole: connectingSceneSession.role)
     }
-    
-    func application(_ application: UIApplication, didDiscardSceneSessions sceneSessions: Set<UISceneSession>) {
-        // Called when the user discards a scene session.
-        // If any sessions were discarded while the application was not running, this will be called shortly after application:didFinishLaunchingWithOptions.
-        // Use this method to release any resources that were specific to the discarded scenes, as they will not return.
-    }
+
     
     
 }
