@@ -36,6 +36,7 @@ class TabBarViewController: UITabBarController {
         navController.tabBarItem.title = title
         navController.tabBarItem.image = image
         navController.tabBarItem.tag = tag
+        navController.navigationBar.tintColor = .label
         navController.navigationBar.prefersLargeTitles = true
         rootViewController.navigationItem.title = title
         return navController

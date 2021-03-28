@@ -8,18 +8,21 @@ enum ApiError: Error {
     case other(error: Error)
 }
 
+typealias CompletionHandler<Value> = (Result<Value, ApiError>) -> Void
+
 protocol Client: class {
     var baseUrl: String { get }
     func call<O: Decodable>(type: O.Type,
                             endpoint: Endpoint,
-                            completion: @escaping (_ result: Result<O, ApiError>) -> Void)
+                            completion: @escaping CompletionHandler<O>
+    )
 }
 
 extension Client {
 
     public func call<O: Decodable>(type: O.Type,
                             endpoint: Endpoint,
-                            completion: @escaping (_ result: Result<O, ApiError>) -> Void ){
+                            completion: @escaping CompletionHandler<O>){
         
         guard var request = createUrlRequest(for: endpoint) else {
             completion(.failure(ApiError.invalidPath))
@@ -38,7 +41,7 @@ extension Client {
     }
     
     private func performDataTask<O: Decodable>(request: URLRequest,
-                                 completion: @escaping (_ result: Result<O, ApiError>) -> Void ) {
+                                 completion: @escaping CompletionHandler<O>) {
         
         let session = URLSession(configuration: .default)
 
