@@ -2,7 +2,7 @@ import Foundation
 import Combine
 
 enum ApiError: Error {
-    case cannotDecodeOutput
+    case cannotDecodeOutput(error: Error)
     case cannotEncodeInput
     case noData
     case invalidPath
@@ -59,7 +59,7 @@ extension Client {
             .map(\.data)
             .mapError { _ in ApiError.noData}
             .decode(type: O.self, decoder: decoder)
-            .mapError { _ in ApiError.cannotDecodeOutput }
+            .mapError { error in ApiError.cannotDecodeOutput(error: error) }
             .eraseToAnyPublisher()
         
     }
