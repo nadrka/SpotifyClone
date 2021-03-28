@@ -6,10 +6,12 @@
 //
 
 import Foundation
+import Combine
 
 class AuthViewModel {
     
     public var completionHandler: ((Bool) -> ())?
+    private var cancellables = Set<AnyCancellable>()
     
     let authManager = AuthManager.shared
     
@@ -26,11 +28,17 @@ class AuthViewModel {
             return
         }
         
-        authManager.exchangeCodeForToken(code: code) { [weak self] success in
-            DispatchQueue.main.async {
+        authManager.exchangeCodeForToken(code: code)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { completion in
+                switch completion {
+                case .finished: break
+                case .failure(let error):
+                    print(error)
+                }
+            }, receiveValue: { [weak self] success in
                 self?.completionHandler?(success)
-            }
-        }
+            }).store(in: &cancellables)
     }
     
 }

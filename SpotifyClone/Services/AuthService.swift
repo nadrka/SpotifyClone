@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Combine
 
 class AuthService {
     let client: Client
@@ -14,16 +15,16 @@ class AuthService {
         self.client = client
     }
     
-    func getToken(code: String, completion: @escaping (Result<AuthResponse, ApiError>) -> Void) {
+    func getToken(code: String) -> AnyPublisher<AuthResponse, ApiError> {
         let endpoint = API.getToken(code: code)
         
-        client.call(type: AuthResponse.self, endpoint: endpoint, completion: completion)
+        return client.call(type: AuthResponse.self, endpoint: endpoint)
     }
     
-    func getToken(refreshToken: String, completion: @escaping (Result<AuthResponse, ApiError>) -> Void) {
+    func getToken(refreshToken: String) -> AnyPublisher<AuthResponse, ApiError>{
         let endpoint = API.getToken(refreshToken: refreshToken)
         
-        client.call(type: AuthResponse.self, endpoint: endpoint, completion: completion)
+        return client.call(type: AuthResponse.self, endpoint: endpoint)
     }
     
 }

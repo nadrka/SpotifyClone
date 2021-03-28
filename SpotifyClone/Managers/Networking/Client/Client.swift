@@ -1,4 +1,5 @@
 import Foundation
+import Combine
 
 enum ApiError: Error {
     case cannotDecodeOutput
@@ -6,69 +7,61 @@ enum ApiError: Error {
     case noData
     case invalidPath
     case other(error: Error)
+    case noToken
+    case unknown
 }
 
 typealias CompletionHandler<Value> = (Result<Value, ApiError>) -> Void
 
 protocol Client: class {
     var baseUrl: String { get }
-    func call<O: Decodable>(type: O.Type,
-                            endpoint: Endpoint,
-                            completion: @escaping CompletionHandler<O>
-    )
+    func call<O: Decodable>(type: O.Type, endpoint: Endpoint) -> AnyPublisher<O, ApiError>
 }
 
 extension Client {
-
-    public func call<O: Decodable>(type: O.Type,
-                            endpoint: Endpoint,
-                            completion: @escaping CompletionHandler<O>){
+    
+    public func call<O: Decodable>(type: O.Type, endpoint: Endpoint) -> AnyPublisher<O, ApiError>{
         
-        guard var request = createUrlRequest(for: endpoint) else {
-            completion(.failure(ApiError.invalidPath))
-            return
+        guard let request = createUrlRequest(for: endpoint) else {
+            return Fail(error: ApiError.invalidPath)
+                .eraseToAnyPublisher()
         }
         
         if endpoint.authorizationNeeded {
-            AuthManager.shared.withValidToken { [weak self] token in
-                request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-                self?.performDataTask(request: request, completion: completion)
-            }
+            return AuthManager.shared.withValidToken()
+                .mapError { _ in
+                    ApiError.noToken
+                }.flatMap { [weak self] (token: String) in
+                    return self?.performDataTask(request: request, with: token) ??
+                        Fail(error: ApiError.unknown).eraseToAnyPublisher()
+                }
+                .eraseToAnyPublisher()
+                
         } else {
-            performDataTask(request: request, completion: completion)
+            return performDataTask(request: request, with: nil)
         }
         
     }
     
-    private func performDataTask<O: Decodable>(request: URLRequest,
-                                 completion: @escaping CompletionHandler<O>) {
+    private func performDataTask<O: Decodable>(request: URLRequest, with token: String?) -> AnyPublisher<O, ApiError> {
+        var request = request
+        if let token = token {
+            request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        }
         
         let session = URLSession(configuration: .default)
-
-        let dataTask = session.dataTask(with: request) { data, response, error in
-            if let error = error {
-                completion(.failure(.other(error: error)))
-                return
-            }
-
-            guard let data = data else {
-                completion(.failure(ApiError.noData))
-                return
-            }
-
-            do {
-                let decoder = JSONDecoder()
-                decoder.keyDecodingStrategy = .convertFromSnakeCase
-                let output = try decoder.decode(O.self, from: data)
-                completion(.success(output))
-            } catch let jsonError {
-                print(jsonError)
-                completion(.failure(ApiError.cannotDecodeOutput))
-
-            }
-        }
-
-        dataTask.resume()
+        
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        
+        return session.dataTaskPublisher(for: request)
+            .mapError { ApiError.other(error: $0) }
+            .map(\.data)
+            .mapError { _ in ApiError.noData}
+            .decode(type: O.self, decoder: decoder)
+            .mapError { _ in ApiError.cannotDecodeOutput }
+            .eraseToAnyPublisher()
+        
     }
     
     private func createUrlRequest(for endpoint: Endpoint) -> URLRequest? {
@@ -87,10 +80,10 @@ extension Client {
             let data = getHttpBody(bodyParameters: bodyParameters)
             urlRequest.httpBody = data
         }
-
+        
         return urlRequest
     }
-
+    
     private func getHttpBody(bodyParameters: Body) -> Data? {
         var components = URLComponents()
         let queryItems = bodyParameters.map { URLQueryItem(name: $0.key, value: $0.value) }

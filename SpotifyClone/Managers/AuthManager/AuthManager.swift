@@ -6,11 +6,14 @@
 //
 
 import Foundation
+import Combine
 
 final class AuthManager {
     static let shared = AuthManager()
     let authService = AuthService(client: AuthClient())
     private var refreshingToken = false
+    
+    private var cancellables = Set<AnyCancellable>()
     
     private init() {}
     
@@ -47,70 +50,37 @@ final class AuthManager {
         return currentDate.addingTimeInterval(fiveMinutes) >= expirationDate
     }
     
-    public func exchangeCodeForToken(code: String, completion: @escaping (Bool) -> Void) {
-        authService.getToken(code: code) { [weak self] result in
-            switch result {
-            case .success(let result):
-                self?.cacheResult(result: result)
-                completion(true)
-            case .failure(let error):
-                print(error.localizedDescription)
-                completion(false)
-            }
-        }
+    public func exchangeCodeForToken(code: String) -> AnyPublisher<Bool, ApiError> {
+        let subject = PassthroughSubject<Bool, ApiError>()
+        
+        authService.getToken(code: code)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { completion in
+                print(completion)
+            }, receiveValue: { [weak self] (authReponse: AuthResponse) in
+                self?.cacheResult(result: authReponse)
+                subject.send(true)
+            }).store(in: &cancellables)
+        
+        return subject.eraseToAnyPublisher()
     }
     
-    private var onRefreshBlocks = [(String) -> Void]()
-    
-    public func withValidToken(completion: @escaping (_ token: String) -> Void) {
-        guard !refreshingToken else {
-            onRefreshBlocks.append(completion)
-            return
+    public func withValidToken() -> AnyPublisher<String, ApiError> {
+        guard let refreshToken = refreshToken else {
+            return Fail(error: ApiError.noToken)
+                .eraseToAnyPublisher()
         }
-        
         if shouldRefreshToken {
-            refreshIfNeeded { [weak self] success in
-                if let token = self?.accessToken, success {
-                    completion(token)
-                }
-            }
+            return authService.getToken(refreshToken: refreshToken)
+                .map(\.accessToken)
+                .eraseToAnyPublisher()
         }
         else if let token = accessToken {
-            completion(token)
-        }
-    }
-    
-    
-    
-    public func refreshIfNeeded(completion: @escaping (Bool) -> Void) {
-        guard !refreshingToken else {
-            return
-        }
-        
-        guard shouldRefreshToken else {
-            completion(true)
-            return
-        }
-        
-        guard let refreshToken = refreshToken else {
-            return
-        }
-        
-        refreshingToken = true
-        
-        authService.getToken(refreshToken: refreshToken) { [weak self] result in
-            self?.refreshingToken = false
-            switch result {
-            case .success(let result):
-                print("Successfully refreshed")
-                self?.onRefreshBlocks.forEach { $0(result.accessToken)}
-                self?.onRefreshBlocks.removeAll()
-                self?.cacheResult(result: result)
-                completion(true)
-            case .failure(let error):
-                print(error.localizedDescription)
-                completion(false)
-            }
+            return Just(token)
+                .setFailureType(to: ApiError.self)
+                .eraseToAnyPublisher()
+        } else {
+            fatalError("Nie powinno się wywalić")
         }
     }
     

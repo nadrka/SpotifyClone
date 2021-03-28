@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Combine
 
 class UserProfileService {
     let client: Client
@@ -14,10 +15,10 @@ class UserProfileService {
         self.client = client
     }
     
-    public func getCurrentUserProfile(completion: @escaping (Result<Profile, ApiError>) -> Void) {
+    public func getCurrentUserProfile() -> AnyPublisher<Profile, ApiError> {
         let endpoint = API.getCurrentUserProfile()
         
-        client.call(type: Profile.self, endpoint: endpoint, completion: completion)
+        return client.call(type: Profile.self, endpoint: endpoint)
     }
    
 }
