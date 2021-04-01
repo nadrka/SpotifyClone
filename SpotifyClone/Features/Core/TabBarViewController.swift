@@ -21,8 +21,10 @@ class TabBarViewController: UITabBarController {
     }
     
     private func prepareViewControllers() {
+        let homeVM = HomeViewModel()
+        let homeVC = HomeViewController(viewModel: homeVM)
         viewControllers = [
-            createNavController(for: HomeViewController(), title: NSLocalizedString("Home", comment: ""), image: UIImage(systemName: "house"), tag: TabBarTag.home.rawValue),
+            createNavController(for: homeVC, title: NSLocalizedString("Home", comment: ""), image: UIImage(systemName: "house"), tag: TabBarTag.home.rawValue),
             createNavController(for: SearchViewController(), title: NSLocalizedString("Search", comment: ""), image: UIImage(systemName: "magnifyingglass"), tag: TabBarTag.search.rawValue),
             createNavController(for: LibraryViewController(), title: NSLocalizedString("Library", comment: ""), image: UIImage(systemName: "person"), tag: TabBarTag.library.rawValue)
         ]

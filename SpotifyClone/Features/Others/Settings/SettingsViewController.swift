@@ -133,7 +133,7 @@ private extension SettingsViewController {
     }
     
     
-    func makeHeaderRegistration() -> HeaderRegistration{
+    func makeHeaderRegistration() -> HeaderRegistration {
         HeaderRegistration(elementKind: UICollectionView.elementKindSectionHeader) {
             [unowned self] (headerView, elementKind, indexPath) in
             

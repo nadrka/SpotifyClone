@@ -16,4 +16,5 @@ struct Track: Decodable {
     let durationMs: Int
     let isPlayable: Bool?
     let explicit: Bool
+    let album: Album
 }
