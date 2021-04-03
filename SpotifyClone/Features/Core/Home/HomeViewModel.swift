@@ -28,7 +28,7 @@ class HomeViewModel {
     
     let browseService: BrowseService
     
-    var realeses = [Album]()
+    var albums = [Album]()
     var playlists = [Playlist]()
     var recommandations = [Track]()
     
@@ -53,14 +53,14 @@ class HomeViewModel {
                     self?.state.send(.error)
                 }
             }, receiveValue: { [weak self] release, playlist, recommandation in
-                self?.realeses = release.albums.items
+                self?.albums = release.albums.items
                 self?.playlists = playlist.playlists.items
                 self?.recommandations = recommandation.tracks
                 self?.state.send(.loaded)
             }).store(in: &cancellables)
     }
     
-    func handleSettingsButtonTap() {
+    @objc func handleSettingsButtonTap() {
         print("Show settings screen")
         action.send(.settings)
     }
@@ -77,7 +77,7 @@ class HomeViewModel {
             print("show Playlist details")
             action.send(.playlistDetails(playlist: playlist))
         case .realeases:
-            guard let release = getRelease(for: row) else {
+            guard let release = getAlbum(for: row) else {
                 return
             }
             action.send(.releaseDetails(release: release))
@@ -98,15 +98,15 @@ extension HomeViewModel {
     func numberOfRow(for sectionIndex: Int) -> Int{
         let section = Section(rawValue: sectionIndex)
         switch section {
-        case .realeases: return realeses.count
+        case .realeases: return albums.count
         case .playlist: return playlists.count
         case .recommandation: return recommandations.count
         case nil: return 0
         }
     }
     
-    func getRelease(for row: Int) -> Album? {
-        return realeses.indices.contains(row) ? realeses[row] : nil
+    func getAlbum(for row: Int) -> Album? {
+        return albums.indices.contains(row) ? albums[row] : nil
     }
     
     func getPlaylist(for row: Int) -> Playlist? {

@@ -7,12 +7,11 @@
 
 import UIKit
 
-class RecommendedCollectionViewCell: UICollectionViewCell {
-    static let reusableIdentifier = "RecommendedCollectionViewCell"
+class TrackCollectionViewCell: UICollectionViewCell {
+    static let reusableIdentifier = "TrackCollectionViewCell"
     
     private let albumCoverImage: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(systemName: "photo")
         imageView.layer.cornerRadius = 5
         imageView.clipsToBounds = true
         imageView.contentMode = .scaleAspectFit
@@ -54,8 +53,8 @@ class RecommendedCollectionViewCell: UICollectionViewCell {
     
     private func applyConstraints() {
         albumCoverImage.snp.makeConstraints { make in
-            make.height.equalTo(60)
-            make.width.equalTo(60)
+            make.height.equalTo(0)
+            make.width.equalTo(0)
             make.centerY.equalToSuperview()
             make.leading.equalToSuperview().inset(4)
         }
@@ -77,9 +76,13 @@ class RecommendedCollectionViewCell: UICollectionViewCell {
     func configure(with track: Track) {
         albumNameLabel.text = track.name
         artistNameLabel.text = track.artists.first?.name ?? ""
-        let imageURLString = track.album.images.first?.url ?? ""
+        let imageURLString = track.album?.images.first?.url ?? ""
         if let url =  URL(string: imageURLString) {
             albumCoverImage.kf.setImage(with: url)
+            albumCoverImage.snp.updateConstraints { make in
+                make.height.equalTo(60)
+                make.width.equalTo(60)
+            }
         }
     }
 

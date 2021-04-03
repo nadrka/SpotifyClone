@@ -24,14 +24,6 @@ extension Playlist {
 }
 
 extension Playlist {
-    struct Track: Decodable {
-        let href: String
-        let total: Int
-    }
-}
-
-
-extension Playlist {
     struct List: Decodable {
         let items: [Playlist]
     }

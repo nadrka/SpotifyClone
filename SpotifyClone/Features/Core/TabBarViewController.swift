@@ -14,6 +14,8 @@ enum TabBarTag: Int {
 }
 
 class TabBarViewController: UITabBarController {
+    private var homeFlow: HomeFlow!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -23,11 +25,15 @@ class TabBarViewController: UITabBarController {
     private func prepareViewControllers() {
         let homeVM = HomeViewModel()
         let homeVC = HomeViewController(viewModel: homeVM)
+        homeFlow = HomeFlow(homeViewController: homeVC)
+        
         viewControllers = [
             createNavController(for: homeVC, title: NSLocalizedString("Home", comment: ""), image: UIImage(systemName: "house"), tag: TabBarTag.home.rawValue),
             createNavController(for: SearchViewController(), title: NSLocalizedString("Search", comment: ""), image: UIImage(systemName: "magnifyingglass"), tag: TabBarTag.search.rawValue),
             createNavController(for: LibraryViewController(), title: NSLocalizedString("Library", comment: ""), image: UIImage(systemName: "person"), tag: TabBarTag.library.rawValue)
         ]
+        
+        homeFlow.start()
     }
     
     fileprivate func createNavController(for rootViewController: UIViewController,

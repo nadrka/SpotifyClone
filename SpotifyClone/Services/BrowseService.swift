@@ -21,10 +21,22 @@ class BrowseService {
         return client.call(type: Realeses.self, endpoint: endpoint)
     }
     
-    func getFeaturedPlaylists(limit: Int? = nil) -> AnyPublisher<Playlist, ApiError>{
+    func getAlbumDetails(album: Album) -> AnyPublisher<Album.Details, ApiError>{
+        let endpoint = API.getAlbumDetails(for: album)
+        
+        return client.call(type: Album.Details.self, endpoint: endpoint)
+    }
+    
+    func getFeaturedPlaylists(limit: Int? = nil) -> AnyPublisher<Browse.FeaturedPlaylistResponse, ApiError>{
         let endpoint = API.getFeaturedPlaylists(limit: limit)
         
-        return client.call(type: Playlist.self, endpoint: endpoint)
+        return client.call(type: Browse.FeaturedPlaylistResponse.self, endpoint: endpoint)
+    }
+    
+    func getPlaylistDetails(playlist: Playlist) -> AnyPublisher<Playlist.Details, ApiError>{
+        let endpoint = API.getPlaylistDetails(for: playlist)
+        
+        return client.call(type: Playlist.Details.self, endpoint: endpoint)
     }
     
     func getRecommendation(limit: Int? = nil) -> AnyPublisher<Recommandation, ApiError>{
@@ -59,7 +71,6 @@ class BrowseService {
 
 extension BrowseService {
     typealias Realeses = Browse.NewRealesesResponse
-    typealias Playlist = Browse.FeaturedPlaylistResponse
     typealias Recommandation = Browse.RecommandationResponse
     typealias Genres = Browse.GenresResponse
 }

@@ -24,6 +24,21 @@ struct Endpoint {
     let body: Body?
     let authorizationNeeded: Bool
     
+    init(method: HttpMethod,
+         path: String,
+         queryParameters: Parameters? = nil,
+         headers: Headers? = nil,
+         body: Body? = nil,
+         authorizationNeeded: Bool
+    ) {
+        self.method = method
+        self.path = path
+        self.queryParameters = queryParameters
+        self.headers = headers
+        self.body = body
+        self.authorizationNeeded = authorizationNeeded
+    }
+    
     
     func url(with baseURL: String) -> URL? {
         let string = baseURL + path
@@ -43,4 +58,5 @@ struct Endpoint {
         return urlComps.url
         
     }
+    
 }

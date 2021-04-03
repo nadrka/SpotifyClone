@@ -14,11 +14,26 @@ extension API {
             method: .get,
             path: "/browse/new-releases",
             queryParameters: queryParameters,
-            headers:nil,
-            body: nil,
             authorizationNeeded: true
         )
     }
+    
+    static func getAlbumDetails(for album: Album) -> Endpoint {
+        return Endpoint(
+            method: .get,
+            path: "/albums/\(album.id)",
+            authorizationNeeded: true
+        )
+    }
+    
+    static func getPlaylistDetails(for playlist: Playlist) -> Endpoint {
+        return Endpoint(
+            method: .get,
+            path: "/playlists/\(playlist.id)",
+            authorizationNeeded: true
+        )
+    }
+    
     
     static func getFeaturedPlaylists(limit: Int?) -> Endpoint {
         let queryParameters = limit.notNil ? ["limit": "\(limit!)"] : nil
@@ -26,8 +41,6 @@ extension API {
             method: .get,
             path: "/browse/featured-playlists",
             queryParameters: queryParameters,
-            headers:nil,
-            body: nil,
             authorizationNeeded: true
         )
     }
@@ -41,8 +54,6 @@ extension API {
             method: .get,
             path: "/recommendations",
             queryParameters: queryParameters,
-            headers:nil,
-            body: nil,
             authorizationNeeded: true
         )
     }
@@ -51,9 +62,6 @@ extension API {
         return Endpoint(
             method: .get,
             path: "/recommendations/available-genre-seeds",
-            queryParameters: nil,
-            headers:nil,
-            body: nil,
             authorizationNeeded: true
         )
     }

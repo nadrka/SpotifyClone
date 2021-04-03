@@ -31,7 +31,7 @@ class HomeViewController: UIViewController {
         
         view.backgroundColor = .systemBackground
         
-        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "gear"), style: .done, target: self, action: #selector(didTapSettings))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "gear"), style: .done, target: self.viewModel, action: #selector(viewModel.handleSettingsButtonTap))
         
         viewModel.state.sink { [weak self] state in
             switch state {
@@ -60,20 +60,11 @@ class HomeViewController: UIViewController {
         
         collectionView.register(NewReleaseCollectionViewCell.self, forCellWithReuseIdentifier: NewReleaseCollectionViewCell.reusableIdentifier)
         collectionView.register(PlaylistCollectionViewCell.self, forCellWithReuseIdentifier: PlaylistCollectionViewCell.reusableIdentifier)
-        collectionView.register(RecommendedCollectionViewCell.self, forCellWithReuseIdentifier: RecommendedCollectionViewCell.reusableIdentifier)
+        collectionView.register(TrackCollectionViewCell.self, forCellWithReuseIdentifier: TrackCollectionViewCell.reusableIdentifier)
         
         return collectionView
     }
-    
-    @objc private func didTapSettings() {
-        viewModel.handleSettingsButtonTap()
-//        let vm = SettingsViewModel()
-//        let vc = SettingsViewController(viewModel: vm)
-//        
-//        vc.title = "Settings"
-//        vc.navigationItem.largeTitleDisplayMode = .never
-//        navigationController?.pushViewController(vc, animated: true)
-    }
+
 }
 
 
@@ -118,14 +109,14 @@ extension HomeViewController: UICollectionViewDataSource {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: NewReleaseCollectionViewCell.reusableIdentifier, for: indexPath) as? NewReleaseCollectionViewCell else {
             return UICollectionViewCell()
         }
-        if let album = viewModel.getRelease(for: indexPath.row) {
+        if let album = viewModel.getAlbum(for: indexPath.row) {
             cell.configure(with: album)
         }
         return cell
     }
     
     func makeRecommandationCell(indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RecommendedCollectionViewCell.reusableIdentifier, for: indexPath) as? RecommendedCollectionViewCell else {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TrackCollectionViewCell.reusableIdentifier, for: indexPath) as? TrackCollectionViewCell else {
             return UICollectionViewCell()
         }
         if let track = viewModel.getRecommandation(for: indexPath.row) {
